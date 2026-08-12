@@ -1,0 +1,48 @@
+name: Validate Strategy Pack
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Lua syntax checker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+
+      - name: Validate manifest and service paths
+        run: python tools/validate_pack.py
+
+      - name: Check Lua syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            luac5.4 -p "$file"
+          done < <(find discord telegram whatsapp youtube instagram tiktok -type f -name '*.lua' -print0)
+
+      - name: Verify raw manifest shape
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('manifest.json').read_text(encoding='utf-8'))
+          assert d['pack_id'] == 'nfqws2-android-services'
+          assert d['schema'] == 1
+          print('Raw manifest contract OK')
+          PY
