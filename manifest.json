@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "pack_id": "nfqws2-android-services",
+  "version": "2026.08.12.2",
+  "version_code": 2,
+  "min_app_version_code": 5,
+  "min_engine_tag": "v1.0.4",
+  "backend": "preview-tls-v1",
+  "transport": {
+    "tls_fragment": true,
+    "sni_split": true,
+    "quic_udp443_fallback": true
+  },
+  "services": {
+    "discord": {"enabled": true, "lua": "discord/default.lua"},
+    "telegram": {"enabled": true, "lua": "telegram/default.lua"},
+    "whatsapp": {"enabled": true, "lua": "whatsapp/default.lua"},
+    "youtube": {"enabled": true, "lua": "youtube/default.lua"},
+    "instagram": {"enabled": true, "lua": "instagram/default.lua"},
+    "tiktok": {"enabled": true, "lua": "tiktok/default.lua"}
+  },
+  "notes": "Initial public Strategy Pack channel. Same transport behavior as the 0.4 factory pack; version bump is intentional so the remote updater can be tested safely."
+}
